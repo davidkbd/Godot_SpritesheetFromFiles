@@ -1,7 +1,7 @@
 # Godot_SpritesheetFromFiles
 ### Utility to generate a spritesheet from a PNG-Sequence
 
-I have needed sometimes join a list of PNG in one png.
+I have needed sometimes merge a list of PNG in one png.
 Here is a tool usefull for this job.
 You can export a sequence of png files (with blender, for example) an merge all into a single png.
 
