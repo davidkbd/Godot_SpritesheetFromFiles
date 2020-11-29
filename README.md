@@ -7,9 +7,9 @@ You can export a sequence of png files (with blender, for example) an merge all 
 
 ### How to use?
 
-1 - Press the "Select Files" Button. Browse your project and select all pngs you want.
-2 - Configure your grid with the options of the right of the tool: with of each frame, height and number of frames per row.
-3 - Press the "Process" Button and select a File.
+1. Press the "Select Files" Button. Browse your project and select all pngs you want.
+1. Configure your grid with the options of the right of the tool: with of each frame, height and number of frames per row.
+1. Press the "Process" Button and select a File.
 
 Your file will be created instantly.
 
