@@ -6,14 +6,14 @@ onready var file_list_container  = $FileListContainer
 func _on_options_changed(width : int, height : int, files_per_row : int):
 	file_list_container.columns = files_per_row
 
-func _on_files_selected(files : Array):
+func _on_files_selected(files : Array, _biggest_size):
 	_clear_files()
 	for file in files:
 		file_list_container.add_child(_create_file(file))
 
-func _create_file(file : String) -> Control:
+func _create_file(file) -> Control:
 	var r = TextureRect.new()
-	r.texture = load(file)
+	r.texture = file
 	r.expand = true
 #	r.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
 	r.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
