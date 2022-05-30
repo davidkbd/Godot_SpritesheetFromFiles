@@ -13,6 +13,9 @@ You can export a sequence of png files (with blender, for example) an merge all 
 
 Your file will be created instantly.
 
+### LICENSE and CREDITS
+These files are located in addons/spritesheet-from-files
+
 ### Thats all!
 If you are felling it, please leave a donation!
 
