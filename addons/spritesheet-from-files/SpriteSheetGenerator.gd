@@ -1,6 +1,8 @@
 tool
 extends Node
 
+signal process_finished(filepath, err)
+
 func process(data):
 	var count = data.files.size()
 	var items_per_row : float = min(data.items_per_row, count)
@@ -8,7 +10,9 @@ func process(data):
 	var h = ceil(count / items_per_row)
 	var spritesheet : Image = _create_image(w, h, data)
 	_copy_images_to_spritesheet(spritesheet, w, h, items_per_row, data)
-	spritesheet.save_png(data.output_file)
+	var err = spritesheet.save_png(data.output_file)
+	emit_signal("process_finished", data.output_file, err)
+	
 
 func _create_image(w : int, h : int, data):
 	var r = Image.new()
@@ -20,7 +24,7 @@ func _copy_images_to_spritesheet(spritesheet : Image, w : int, h : int, items_pe
 	var x : int = 0
 	var y : int = 0
 	for file in data.files:
-		var src = load(file).get_data()
+		var src = file.get_data()
 		var pos = Vector2(x * data.frame_width, y * data.frame_height)
 		spritesheet.blit_rect(src, rect, pos)
 		x += 1

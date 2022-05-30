@@ -25,9 +25,12 @@ func _on_changed(new_value : float):
 			int(height_value.value),
 			int(items_column_value.value))
 
-func _on_files_selected(files : Array):
+func _on_files_selected(files : Array, biggest_size):
 	if int(items_column_value.value) > files.size():
 		items_column_value.value = files.size()
+	$WidthValue.value = biggest_size.x
+	$HeightValue.value = biggest_size.y
+	$ItemsColumnValue.value = _calculate_optimal_frames_per_row(files.size())
 
 func _ready():
 	width_value.connect("value_changed", self, "_on_changed")
@@ -36,3 +39,10 @@ func _ready():
 	width_value.editable = false
 	height_value.editable = false
 	items_column_value.editable = false
+
+func _calculate_optimal_frames_per_row(size: int):
+	var biggest_int = 1
+	for i in range(1, size):
+		if size % i == 0:
+			biggest_int = i
+	return biggest_int
