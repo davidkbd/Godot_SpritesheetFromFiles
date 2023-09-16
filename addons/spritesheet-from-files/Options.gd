@@ -1,13 +1,13 @@
-tool
+@tool
 extends VBoxContainer
 
 signal changed(width, height, items_per_row)
 
-export(bool) var enabled : bool = false setget set_enabled, is_enabled
+@export var enabled: bool = false : get = is_enabled, set = set_enabled
 
-onready var width_value        : SpinBox = $WidthValue
-onready var height_value       : SpinBox = $HeightValue
-onready var items_column_value : SpinBox = $ItemsColumnValue
+@onready var width_value        : SpinBox = $WidthValue
+@onready var height_value       : SpinBox = $HeightValue
+@onready var items_column_value : SpinBox = $ItemsColumnValue
 
 func set_enabled(new_enabled : bool):
 	enabled = new_enabled
@@ -20,6 +20,7 @@ func set_enabled(new_enabled : bool):
 func is_enabled() -> bool: return enabled
 
 func _on_changed(new_value : float):
+	print(int(width_value.value))
 	emit_signal("changed",
 			int(width_value.value),
 			int(height_value.value),
@@ -33,9 +34,9 @@ func _on_files_selected(files : Array, biggest_size):
 	$ItemsColumnValue.value = _calculate_optimal_frames_per_row(files.size())
 
 func _ready():
-	width_value.connect("value_changed", self, "_on_changed")
-	height_value.connect("value_changed", self, "_on_changed")
-	items_column_value.connect("value_changed", self, "_on_changed")
+	width_value.connect("value_changed",Callable(self,"_on_changed"))
+	height_value.connect("value_changed",Callable(self,"_on_changed"))
+	items_column_value.connect("value_changed",Callable(self,"_on_changed"))
 	width_value.editable = false
 	height_value.editable = false
 	items_column_value.editable = false

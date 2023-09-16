@@ -1,7 +1,7 @@
-tool
+@tool
 extends ScrollContainer
 
-onready var file_list_container  = $FileListContainer
+@onready var file_list_container  = $FileListContainer
 
 func _on_options_changed(width : int, height : int, files_per_row : int):
 	file_list_container.columns = files_per_row

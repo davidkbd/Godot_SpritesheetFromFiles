@@ -1,10 +1,10 @@
-tool
+@tool
 extends EditorPlugin
 
 var cpm
 
 func _enter_tree():
-	cpm = preload("res://addons/spritesheet-from-files/SpritesheetFromFiles.tscn").instance()
+	cpm = preload("res://addons/spritesheet-from-files/SpritesheetFromFiles.tscn").instantiate()
 #	cpm.undoredo = get_undo_redo()
 	cpm.editor_interface = get_editor_interface()
 	add_control_to_bottom_panel(cpm, "Spritesheet")
