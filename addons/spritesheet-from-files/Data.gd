@@ -1,4 +1,4 @@
-tool
+@tool
 extends Node
 
 var frame_width      : int

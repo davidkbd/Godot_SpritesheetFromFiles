@@ -1,4 +1,4 @@
-tool
+@tool
 extends Node
 
 signal process_finished(filepath, err)
@@ -9,6 +9,8 @@ func process(data):
 	var w = items_per_row
 	var h = ceil(count / items_per_row)
 	var spritesheet : Image = _create_image(w, h, data)
+	await get_tree().process_frame
+	print(spritesheet.get_size())
 	_copy_images_to_spritesheet(spritesheet, w, h, items_per_row, data)
 	var err = spritesheet.save_png(data.output_file)
 	emit_signal("process_finished", data.output_file, err)
@@ -16,7 +18,8 @@ func process(data):
 
 func _create_image(w : int, h : int, data):
 	var r = Image.new()
-	r.create(w * data.frame_width, h * data.frame_height, false, Image.FORMAT_RGBA8)
+	r= Image.create(w * data.frame_width, h * data.frame_height, false, Image.FORMAT_RGBA8)
+	print(w * data.frame_width," - ", h * data.frame_height)
 	return r
 
 func _copy_images_to_spritesheet(spritesheet : Image, w : int, h : int, items_per_row : int, data):
@@ -24,7 +27,7 @@ func _copy_images_to_spritesheet(spritesheet : Image, w : int, h : int, items_pe
 	var x : int = 0
 	var y : int = 0
 	for file in data.files:
-		var src = file.get_data()
+		var src = file.get_image()
 		var pos = Vector2(x * data.frame_width, y * data.frame_height)
 		spritesheet.blit_rect(src, rect, pos)
 		x += 1

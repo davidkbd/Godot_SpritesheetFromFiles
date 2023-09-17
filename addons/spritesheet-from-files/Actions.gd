@@ -1,13 +1,13 @@
-tool
+@tool
 extends HBoxContainer
 
 signal files_selected(files)
 signal process_started(output_file)
 
-export(bool) var enabled : bool = false setget set_enabled, is_enabled
+@export var enabled: bool = false : get = is_enabled, set = set_enabled
 
-onready var select_files_button : Button = $SelectFilesButton
-onready var process_button      : Button = $ProcessButton
+@onready var select_files_button : Button = $SelectFilesButton
+@onready var process_button      : Button = $ProcessButton
 var editor_interface
 
 func set_enabled(new_enabled : bool):
@@ -17,7 +17,7 @@ func set_enabled(new_enabled : bool):
 
 func is_enabled() -> bool: return enabled
 
-func _on_files_selected(files : PoolStringArray):
+func _on_files_selected(files : PackedStringArray):
 	var file_list : Array = []
 	for file in files: file_list.append(file)
 	file_list.sort()
@@ -26,7 +26,7 @@ func _on_files_selected(files : PoolStringArray):
 	var image_list = []
 	var biggest_size = Vector2(0,0)
 	for i in range(file_list.size()):
-		if file_list[i] is Texture:
+		if file_list[i] is Texture2D:
 			image_list.append(file_list[i])
 			if file_list[i].get_height() > biggest_size.y:
 				biggest_size.y = file_list[i].get_height()
@@ -36,27 +36,29 @@ func _on_files_selected(files : PoolStringArray):
 
 func _on_select_files():
 	var dialog = FileDialog.new()
-	dialog.mode = FileDialog.MODE_OPEN_FILES
-	dialog.filters = [ "*.png" ]
-	dialog.window_title = "Select PNGs to convert"
+	dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILES
+	dialog.filters = [ "*.png, *.jpg, *.tga, *.svg" ]
+	dialog.title = "Select PNGs to convert"
 	dialog.dialog_text = "You can select one or more PNG files to create a spritesheet"
-	dialog.connect('modal_closed', dialog, 'queue_free')
-	dialog.connect("files_selected", self, "_on_files_selected")
-	var path : String = editor_interface.get_selected_path()
+	dialog.transient = true
+	dialog.connect('close_requested',Callable(dialog,'queue_free'))
+	dialog.connect("files_selected",Callable(self,"_on_files_selected"))
+	var path : String = editor_interface.get_current_directory()
 	dialog.current_path = path
-	add_child(dialog)
-	dialog.popup_centered_ratio()
+	editor_interface.get_base_control().add_child(dialog)
+	dialog.popup_centered_clamped(Vector2(1050, 700))
+
 
 func _on_output_file_selected(path : String):
 	emit_signal("process_started", path)
 
 func _on_process():
 	var dialog = FileDialog.new()
-	dialog.mode = FileDialog.MODE_SAVE_FILE
-	dialog.filters = [ "*.png" ]
-	dialog.window_title = "Save your spritesheet"
-	dialog.dialog_text = "Select a directory and save your spritesheet"
-	var path = editor_interface.get_selected_path()
+	dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+#	dialog.filters = [ "*.png" ]
+	dialog.title = "Save your spritesheet"
+#	dialog.dialog_text = "Select a directory and save your spritesheet"
+	var path = editor_interface.get_current_directory()
 	var p = path
 	p.erase(0,6)
 	var splits = p.split("/", false)
@@ -74,13 +76,12 @@ func _on_process():
 		dialog.current_file = new_file_name + ".png"
 	else:
 		dialog.current_file = "Spritesheet.png" 
-	dialog.connect('modal_closed', dialog, 'queue_free')
-	dialog.connect("file_selected", self, "_on_output_file_selected")
+	dialog.connect("file_selected",Callable(self,"_on_output_file_selected"))
 	add_child(dialog)
-	dialog.popup_centered_ratio()
+	dialog.popup_centered_clamped(Vector2(1050, 700))
 
 func _ready():
-	select_files_button.connect("pressed", self, "_on_select_files")
-	process_button.connect("pressed", self, "_on_process")
+	select_files_button.connect("pressed",Callable(self,"_on_select_files"))
+	process_button.connect("pressed",Callable(self,"_on_process"))
 	select_files_button.disabled = false
 	process_button.disabled = true
